@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 import React from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import Login from './pages/Login';
@@ -65,3 +66,20 @@ function App() {
 }
 
 export default App;
+||||||| empty tree
+=======
+import { useEffect } from 'react';
+
+function App() {
+  useEffect(() => {
+    fetch('http://localhost:5000/test')
+      .then(res => res.json())
+      .then(data => console.log(data))
+      .catch(err => console.error(err));
+  }, []);
+
+  return <div>Check console for backend response</div>;
+}
+
+export default App;
+>>>>>>> 061919d8829e4d43cb727f8f54f2e98e311906ff
