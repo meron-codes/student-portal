@@ -1,9 +1,13 @@
 const express = require('express');
-const router = express.Router();
-const { addAnnouncement, getAllAnnouncements } = require('../controllers/announcementController');
+const { getAnnouncements, addAnnouncement } = require('../controllers/announcementController');
 const auth = require('../middleware/authMiddleware');
 
-router.post('/', auth, addAnnouncement);       // Admin only (check role in middleware later)
-router.get('/', auth, getAllAnnouncements);    // Students + Admin
+const router = express.Router();
+
+// Everyone logged in can see announcements
+router.get('/', auth(['student','admin']), getAnnouncements);
+
+// Only admin can post new announcements
+router.post('/', auth('admin'), addAnnouncement);
 
 module.exports = router;

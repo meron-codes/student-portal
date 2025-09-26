@@ -1,9 +1,11 @@
 const express = require('express');
-const router = express.Router();
-const { addSchedule, getSchedule } = require('../controllers/scheduleController');
+const { getSchedule, addSchedule } = require('../controllers/scheduleController');
 const auth = require('../middleware/authMiddleware');
 
-router.post('/', auth, addSchedule);
-router.get('/:class_grade', auth, getSchedule);
+const router = express.Router();
+
+// Students can view schedules, admins can manage
+router.get('/:class_grade', auth(['student','admin']), getSchedule);
+router.post('/', auth('admin'), addSchedule);
 
 module.exports = router;

@@ -1,18 +1,27 @@
-const pool = require('../config/db');
-const bcrypt = require('bcryptjs');
+const jwt = require('jsonwebtoken');
 
-const createUser = async (name, email, password, role='student') => {
-  const hashed = await bcrypt.hash(password, 10);
-  const result = await pool.query(
-    'INSERT INTO users (name, email, password, role) VALUES ($1, $2, $3, $4) RETURNING *',
-    [name, email, hashed, role]
-  );
-  return result.rows[0];
+const auth = (allowedRoles = []) => {
+  // if allowedRoles is a string, convert to array
+  if (typeof allowedRoles === 'string') allowedRoles = [allowedRoles];
+
+  return (req, res, next) => {
+    const token = req.header('Authorization')?.split(' ')[1];
+    if (!token) return res.status(401).json({ message: 'No token, authorization denied' });
+
+    try {
+      const decoded = jwt.verify(token, process.env.JWT_SECRET);
+      req.user = decoded; // { id, role }
+
+      // check role
+      if (allowedRoles.length && !allowedRoles.includes(decoded.role)) {
+        return res.status(403).json({ message: 'Access forbidden: insufficient rights' });
+      }
+
+      next();
+    } catch {
+      res.status(401).json({ message: 'Token is not valid' });
+    }
+  };
 };
 
-const getUserByEmail = async (email) => {
-  const result = await pool.query('SELECT * FROM users WHERE email=$1', [email]);
-  return result.rows[0];
-};
-
-module.exports = { createUser, getUserByEmail };
+module.exports = auth;

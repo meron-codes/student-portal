@@ -1,9 +1,11 @@
 const express = require('express');
-const router = express.Router();
-const { addClass, getClasses } = require('../controllers/classController');
+const { getClasses, addClass } = require('../controllers/classController');
 const auth = require('../middleware/authMiddleware');
 
-router.post('/', auth, addClass);
-router.get('/', auth, getClasses);
+const router = express.Router();
+
+// Students can view classes, admins can manage
+router.get('/', auth(['student','admin']), getClasses);
+router.post('/', auth('admin'), addClass);
 
 module.exports = router;
