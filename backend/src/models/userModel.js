@@ -1,27 +1,15 @@
-const jwt = require('jsonwebtoken');
+const pool = require('../db');
 
-const auth = (allowedRoles = []) => {
-  // if allowedRoles is a string, convert to array
-  if (typeof allowedRoles === 'string') allowedRoles = [allowedRoles];
-
-  return (req, res, next) => {
-    const token = req.header('Authorization')?.split(' ')[1];
-    if (!token) return res.status(401).json({ message: 'No token, authorization denied' });
-
-    try {
-      const decoded = jwt.verify(token, process.env.JWT_SECRET);
-      req.user = decoded; // { id, role }
-
-      // check role
-      if (allowedRoles.length && !allowedRoles.includes(decoded.role)) {
-        return res.status(403).json({ message: 'Access forbidden: insufficient rights' });
-      }
-
-      next();
-    } catch {
-      res.status(401).json({ message: 'Token is not valid' });
+const User = {
+    getAll: async () => (await pool.query('SELECT * FROM users')).rows,
+    getById: async (id) => (await pool.query('SELECT * FROM users WHERE user_id=$1',[id])).rows[0],
+    create: async ({ username, password, role }) => {
+        const result = await pool.query(
+            'INSERT INTO users (username,password,role) VALUES ($1,$2,$3) RETURNING *',
+            [username,password,role]
+        );
+        return result.rows[0];
     }
-  };
 };
 
-module.exports = auth;
+module.exports = User;

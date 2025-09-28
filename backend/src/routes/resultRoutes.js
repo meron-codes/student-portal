@@ -1,13 +1,9 @@
 const express = require('express');
-const { getResults, addResult } = require('../controllers/resultController');
-const auth = require('../middleware/authMiddleware');
-
 const router = express.Router();
+const { createResult,getResultsForStudent } = require('../controllers/resultController');
+const { checkRole } = require('../middlewares/auth');
 
-// Students and admins can see results
-router.get('/', auth(['student', 'admin']), getResults);
-
-// Only admin can add new results
-router.post('/', auth('admin'), addResult);
+router.post('/',checkRole(['teacher','admin']),createResult);
+router.get('/student',checkRole(['student']),getResultsForStudent);
 
 module.exports = router;
