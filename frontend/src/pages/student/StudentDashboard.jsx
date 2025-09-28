@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { getResults, getSchedules, getOpportunities, getFeedbacks } from "../../api";
+import { getResults, getSchedules, getOpportunities, getFeedbacks } from "../../api/api";
 
 const StudentDashboard = () => {
   const [results, setResults] = useState([]);

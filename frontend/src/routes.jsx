@@ -1,4 +1,4 @@
-import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import { BrowserRouter as Router, Routes, Route, Navigate } from "react-router-dom";
 
 // Guest pages
 import Home from "./pages/guest/Home";
@@ -12,8 +12,8 @@ import ManageUsers from "./pages/admin/ManageUsers";
 import ManageAnnouncements from "./pages/admin/ManageAnnouncements";
 import ManageSchedules from "./pages/admin/ManageSchedules";
 import ManageResults from "./pages/admin/ManageResults";
-import OpportunitiesAdmin from "./pages/admin/Opportunities";
-import FeedbacksAdmin from "./pages/admin/Feedbacks";
+import OpportunitiesAdmin from "./pages/admin/OpportunitiesAdmin";
+import FeedbacksAdmin from "./pages/admin/FeedbacksAdmin";
 
 // Teacher pages
 import TeacherDashboard from "./pages/teacher/TeacherDashboard";
@@ -25,8 +25,20 @@ import ViewFeedback from "./pages/teacher/ViewFeedback";
 import StudentDashboard from "./pages/student/StudentDashboard";
 import MyResults from "./pages/student/MyResults";
 import MySchedule from "./pages/student/MySchedule";
-import OpportunitiesStudent from "./pages/student/Opportunities";
-import FeedbackStudent from "./pages/student/Feedback";
+import OpportunitiesStudent from "./pages/student/OpportunitiesStudent";
+import FeedbackStudent from "./pages/student/FeedbackStudent";
+
+// Helper component for protecting routes
+const ProtectedRoute = ({ element, allowedRoles }) => {
+  const token = localStorage.getItem("token");
+  const role = localStorage.getItem("role");
+
+  if (!token || !allowedRoles.includes(role)) {
+    return <Navigate to="/login" replace />;
+  }
+
+  return element;
+};
 
 function AppRoutes() {
   return (
@@ -39,26 +51,26 @@ function AppRoutes() {
         <Route path="/login" element={<Login />} />
 
         {/* Admin routes */}
-        <Route path="/admin" element={<AdminDashboard />} />
-        <Route path="/admin/users" element={<ManageUsers />} />
-        <Route path="/admin/announcements" element={<ManageAnnouncements />} />
-        <Route path="/admin/schedules" element={<ManageSchedules />} />
-        <Route path="/admin/results" element={<ManageResults />} />
-        <Route path="/admin/opportunities" element={<OpportunitiesAdmin />} />
-        <Route path="/admin/feedbacks" element={<FeedbacksAdmin />} />
+        <Route path="/admin" element={<ProtectedRoute element={<AdminDashboard />} allowedRoles={['admin']} />} />
+        <Route path="/admin/users" element={<ProtectedRoute element={<ManageUsers />} allowedRoles={['admin']} />} />
+        <Route path="/admin/announcements" element={<ProtectedRoute element={<ManageAnnouncements />} allowedRoles={['admin']} />} />
+        <Route path="/admin/schedules" element={<ProtectedRoute element={<ManageSchedules />} allowedRoles={['admin']} />} />
+        <Route path="/admin/results" element={<ProtectedRoute element={<ManageResults />} allowedRoles={['admin']} />} />
+        <Route path="/admin/opportunities" element={<ProtectedRoute element={<OpportunitiesAdmin />} allowedRoles={['admin']} />} />
+        <Route path="/admin/feedbacks" element={<ProtectedRoute element={<FeedbacksAdmin />} allowedRoles={['admin']} />} />
 
         {/* Teacher routes */}
-        <Route path="/teacher" element={<TeacherDashboard />} />
-        <Route path="/teacher/subjects" element={<MySubjects />} />
-        <Route path="/teacher/upload-results" element={<UploadResults />} />
-        <Route path="/teacher/feedbacks" element={<ViewFeedback />} />
+        <Route path="/teacher" element={<ProtectedRoute element={<TeacherDashboard />} allowedRoles={['teacher']} />} />
+        <Route path="/teacher/subjects" element={<ProtectedRoute element={<MySubjects />} allowedRoles={['teacher']} />} />
+        <Route path="/teacher/upload-results" element={<ProtectedRoute element={<UploadResults />} allowedRoles={['teacher']} />} />
+        <Route path="/teacher/feedbacks" element={<ProtectedRoute element={<ViewFeedback />} allowedRoles={['teacher']} />} />
 
         {/* Student routes */}
-        <Route path="/student" element={<StudentDashboard />} />
-        <Route path="/student/results" element={<MyResults />} />
-        <Route path="/student/schedule" element={<MySchedule />} />
-        <Route path="/student/opportunities" element={<OpportunitiesStudent />} />
-        <Route path="/student/feedback" element={<FeedbackStudent />} />
+        <Route path="/student" element={<ProtectedRoute element={<StudentDashboard />} allowedRoles={['student']} />} />
+        <Route path="/student/results" element={<ProtectedRoute element={<MyResults />} allowedRoles={['student']} />} />
+        <Route path="/student/schedule" element={<ProtectedRoute element={<MySchedule />} allowedRoles={['student']} />} />
+        <Route path="/student/opportunities" element={<ProtectedRoute element={<OpportunitiesStudent />} allowedRoles={['student']} />} />
+        <Route path="/student/feedback" element={<ProtectedRoute element={<FeedbackStudent />} allowedRoles={['student']} />} />
       </Routes>
     </Router>
   );

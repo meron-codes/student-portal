@@ -1,13 +1,13 @@
 import { useState, useEffect } from "react";
 import api from "../../api/api";
 
-export default function ManageResults() {
+export default function MyResults() {
   const [results, setResults] = useState([]);
 
   useEffect(() => {
     const fetchResults = async () => {
       try {
-        const res = await api.get("/results");
+        const res = await api.get("/results/me");
         setResults(res.data);
       } catch (err) {
         console.error("Error fetching results:", err);
@@ -18,17 +18,17 @@ export default function ManageResults() {
 
   return (
     <div className="p-6">
-      <h1 className="text-2xl font-bold mb-4">Manage Results</h1>
+      <h1 className="text-2xl font-bold">My Results</h1>
       {results.length > 0 ? (
-        <ul className="space-y-2">
+        <ul className="space-y-2 mt-4">
           {results.map((r) => (
             <li key={r.result_id} className="p-3 border rounded">
-              Student: {r.student_id} | Subject: {r.subject_id} | Score: {r.score}
+              {r.subject} — Score: {r.score}
             </li>
           ))}
         </ul>
       ) : (
-        <p>No results found.</p>
+        <p>No results available.</p>
       )}
     </div>
   );

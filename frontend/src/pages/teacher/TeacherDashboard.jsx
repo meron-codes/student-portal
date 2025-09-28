@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { getSubjects, getFeedbacks } from "../../api";
+import { getSubjects, getFeedbacks } from "../../api/api";
 
 const TeacherDashboard = () => {
   const [subjects, setSubjects] = useState([]);

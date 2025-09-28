@@ -1,13 +1,13 @@
 import { useState, useEffect } from "react";
 import api from "../../api/api";
 
-export default function ViewFeedback() {
+export default function Feedbacks() {
   const [feedbacks, setFeedbacks] = useState([]);
 
   useEffect(() => {
     const fetchFeedbacks = async () => {
       try {
-        const res = await api.get("/feedback/teacher");
+        const res = await api.get("/feedback");
         setFeedbacks(res.data);
       } catch (err) {
         console.error("Error fetching feedbacks:", err);
@@ -18,9 +18,9 @@ export default function ViewFeedback() {
 
   return (
     <div className="p-6">
-      <h1 className="text-2xl font-bold">Student Feedback</h1>
+      <h1 className="text-2xl font-bold mb-4">View Feedbacks</h1>
       {feedbacks.length > 0 ? (
-        <ul className="space-y-2 mt-4">
+        <ul className="space-y-2">
           {feedbacks.map((f) => (
             <li key={f.feedback_id} className="p-3 border rounded">
               From Student {f.student_id}: {f.message}
@@ -28,7 +28,7 @@ export default function ViewFeedback() {
           ))}
         </ul>
       ) : (
-        <p>No feedback found.</p>
+        <p>No feedback available.</p>
       )}
     </div>
   );

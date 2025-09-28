@@ -8,7 +8,7 @@ import {
   getResults,
   getOpportunities,
   getFeedbacks,
-} from "../../api";
+} from "../../api/api";
 
 const AdminDashboard = () => {
   const [users, setUsers] = useState([]);
