@@ -1,22 +1,21 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import axios from "axios";
+import { loginUser } from "../../api/api"; // import the helper
 
 const Login = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [error, setError] = useState("");
   const navigate = useNavigate();
 
   const handleLogin = async (e) => {
     e.preventDefault();
+    setError("");
 
     try {
-      const res = await axios.post("http://localhost:5000/api/login", { email, password });
-      const { role, token } = res.data;
-
-      // Store token in localStorage (or context)
-      localStorage.setItem("token", token);
-      localStorage.setItem("role", role);
+      // Call the loginUser API function
+      const data = await loginUser(email, password);
+      const { role } = data.user; // backend should return user object with role
 
       // Redirect based on role
       if (role === "admin") navigate("/admin");
@@ -26,15 +25,28 @@ const Login = () => {
 
     } catch (err) {
       console.error(err);
-      alert("Invalid login credentials!");
+      setError(err.message || "Invalid login credentials!");
     }
   };
 
   return (
     <form onSubmit={handleLogin}>
-      <input type="email" placeholder="Email" value={email} onChange={(e) => setEmail(e.target.value)} required />
-      <input type="password" placeholder="Password" value={password} onChange={(e) => setPassword(e.target.value)} required />
+      <input 
+        type="email" 
+        placeholder="Email" 
+        value={email} 
+        onChange={(e) => setEmail(e.target.value)} 
+        required 
+      />
+      <input 
+        type="password" 
+        placeholder="Password" 
+        value={password} 
+        onChange={(e) => setPassword(e.target.value)} 
+        required 
+      />
       <button type="submit">Login</button>
+      {error && <p style={{ color: "red" }}>{error}</p>}
     </form>
   );
 };
