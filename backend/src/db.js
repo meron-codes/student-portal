@@ -1,4 +1,3 @@
-// src/db.js
 const { Pool } = require('pg');
 require('dotenv').config();
 
@@ -10,5 +9,12 @@ const pool = new Pool({
     port: process.env.DB_PORT
 });
 
-pool.on('connect', () => console.log('Connected to DB'));
+// Explicit connection test
+pool.connect()
+  .then(client => {
+    console.log('✅ Connected to DB');
+    client.release();
+  })
+  .catch(err => console.error('❌ DB connection error:', err.stack));
+
 module.exports = pool;
