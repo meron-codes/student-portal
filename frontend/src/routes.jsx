@@ -5,6 +5,8 @@ import Home from "./pages/guest/Home";
 import About from "./pages/guest/About";
 import Contact from "./pages/guest/Contact";
 import Login from "./pages/guest/Login";
+import ForgotPassword from "./pages/ForgotPassword"; // NEW
+import ResetPassword from "./pages/ResetPassword"; // NEW
 
 // Admin pages
 import AdminDashboard from "./pages/admin/AdminDashboard";
@@ -49,6 +51,8 @@ function AppRoutes() {
         <Route path="/about" element={<About />} />
         <Route path="/contact" element={<Contact />} />
         <Route path="/login" element={<Login />} />
+        <Route path="/forgot-password" element={<ForgotPassword />} /> {/* NEW */}
+        <Route path="/reset-password/:token" element={<ResetPassword />} /> {/* NEW */}
 
         {/* Admin routes */}
         <Route path="/admin" element={<ProtectedRoute element={<AdminDashboard />} allowedRoles={['admin']} />} />

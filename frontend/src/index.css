@@ -1,3 +1,10 @@
+
+/* In index.css or globals.css */
+html, body {
+  margin: 0;
+  padding: 0;
+}
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
