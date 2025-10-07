@@ -6,7 +6,7 @@ function Home() {
   return (
     <>
       <Navbar />
-      <main className="mt-16">
+      <main className="">
         {/* Hero Section with school image */}
         <section
           className="relative h-[90vh] flex items-center justify-center text-center bg-cover bg-center"
@@ -75,7 +75,7 @@ function Home() {
 </section>
 
       </main>
-      <Footer />
+      
     </>
   );
 }

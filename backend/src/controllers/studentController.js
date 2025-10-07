@@ -1,25 +1,31 @@
-const Student = require('../models/studentModel');
+const pool = require('../db');
 
-const getAllStudents = async (req,res)=>{
-    try{
-        const students = await Student.getAll();
-        res.json(students);
-    }catch(err){ res.status(500).json({error: err.message}); }
+exports.getResults = async (req, res) => {
+  const { student_id } = req.params;
+  try {
+    const results = await pool.query(
+      `SELECT subject, result_type, score, grade
+       FROM results WHERE student_id=$1 ORDER BY created_at DESC`,
+      [student_id]
+    );
+    res.json(results.rows);
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ message: 'Failed to get results' });
+  }
 };
 
-const getStudentById = async (req,res)=>{
-    try{
-        const student = await Student.getById(req.params.id);
-        if(!student) return res.status(404).json({message:'Student not found'});
-        res.json(student);
-    }catch(err){ res.status(500).json({error: err.message}); }
+exports.getNotifications = async (req, res) => {
+  const { student_id } = req.params;
+  try {
+    const notifs = await pool.query(
+      `SELECT message, created_at, is_read FROM notifications
+       WHERE student_id=$1 ORDER BY created_at DESC`,
+      [student_id]
+    );
+    res.json(notifs.rows);
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ message: 'Failed to get notifications' });
+  }
 };
-
-const createStudent = async (req,res)=>{
-    try{
-        const student = await Student.create(req.body);
-        res.status(201).json(student);
-    }catch(err){ res.status(500).json({error: err.message}); }
-};
-
-module.exports = { getAllStudents,getStudentById,createStudent };

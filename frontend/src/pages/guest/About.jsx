@@ -7,7 +7,7 @@ function About() {
       <Navbar />
 
       {/* Main content */}
-     <main className="pt-16 flex flex-col">
+     <main className=" flex flex-col">
 
   {/* Hero Section */}
   <section className="relative w-full bg-blue-700 text-white py-20 flex items-center justify-center text-center">
@@ -92,7 +92,7 @@ function About() {
 </main>
 
 
-      <Footer />
+      
     </>
   );
 }

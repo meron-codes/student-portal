@@ -1,50 +1,43 @@
-import React, { useEffect, useState } from "react";
-import { getResults, getSchedules, getOpportunities, getFeedbacks } from "../../api/api";
+import DashboardLayout from "../../layouts/DashboardLayout";
+import { useNavigate } from "react-router-dom";
 
-const StudentDashboard = () => {
-  const [results, setResults] = useState([]);
-  const [schedules, setSchedules] = useState([]);
-  const [opportunities, setOpportunities] = useState([]);
-  const [feedbacks, setFeedbacks] = useState([]);
+export default function StudentDashboard() {
+  const navigate = useNavigate();
 
-  useEffect(() => {
-    getResults().then(res => setResults(res.data)).catch(err => console.error(err));
-    getSchedules().then(res => setSchedules(res.data)).catch(err => console.error(err));
-    getOpportunities().then(res => setOpportunities(res.data)).catch(err => console.error(err));
-    getFeedbacks().then(res => setFeedbacks(res.data)).catch(err => console.error(err));
-  }, []);
+  const cards = [
+    {
+      title: "View Results",
+      description: "Check your academic results anytime.",
+      action: () => navigate("/student/results"),
+    },
+    {
+      title: "Notifications",
+      description: "Stay updated with announcements.",
+      action: () => navigate("/student/notifications"),
+    },
+    {
+      title: "Profile",
+      description: "Manage your account and personal info.",
+      action: () => navigate("/student/profile"),
+    },
+  ];
 
   return (
-    <div className="p-6">
-      <h1 className="text-2xl font-bold mb-4">Student Dashboard</h1>
-      <div className="grid grid-cols-2 gap-4">
-        <div className="bg-white shadow p-4 rounded">
-          <h2 className="font-semibold">My Results</h2>
-          <ul>
-            {results.map(r => <li key={r.result_id}>{r.grade} - {r.subject}</li>)}
-          </ul>
-        </div>
-        <div className="bg-white shadow p-4 rounded">
-          <h2 className="font-semibold">My Schedule</h2>
-          <ul>
-            {schedules.map(s => <li key={s.schedule_id}>{s.day} - {s.subject}</li>)}
-          </ul>
-        </div>
-        <div className="bg-white shadow p-4 rounded">
-          <h2 className="font-semibold">Opportunities</h2>
-          <ul>
-            {opportunities.map(o => <li key={o.opportunity_id}>{o.title}</li>)}
-          </ul>
-        </div>
-        <div className="bg-white shadow p-4 rounded">
-          <h2 className="font-semibold">Feedback</h2>
-          <ul>
-            {feedbacks.map(f => <li key={f.feedback_id}>{f.message}</li>)}
-          </ul>
-        </div>
-      </div>
-    </div>
-  );
-};
+    <DashboardLayout role="student">
+      <h1 className="text-3xl font-bold text-gray-800 mb-8">Student Dashboard</h1>
 
-export default StudentDashboard;
+      <div className="grid md:grid-cols-3 gap-6">
+        {cards.map((card, idx) => (
+          <div
+            key={idx}
+            className="bg-white rounded-2xl p-6 shadow-md hover:shadow-lg transition cursor-pointer"
+            onClick={card.action}
+          >
+            <h2 className="text-blue-700 font-semibold text-lg">{card.title}</h2>
+            <p className="text-gray-600 mt-2">{card.description}</p>
+          </div>
+        ))}
+      </div>
+    </DashboardLayout>
+  );
+}

@@ -1,10 +1,8 @@
 const express = require('express');
 const router = express.Router();
-const { getAllStudents,getStudentById,createStudent } = require('../controllers/studentController');
-const { checkRole } = require('../middlewares/auth');
+const { getResults, getNotifications } = require('../controllers/studentController');
 
-router.get('/',checkRole(['admin','teacher']),getAllStudents);
-router.get('/:id',checkRole(['admin','teacher','student']),getStudentById);
-router.post('/',checkRole(['admin']),createStudent);
+router.get('/results/:student_id', getResults);
+router.get('/notifications/:student_id', getNotifications);
 
 module.exports = router;
